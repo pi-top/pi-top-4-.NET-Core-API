@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:PiTop.Abstractions.SMBusDevice">
+            <summary>
+            Wraps I2C device to expose SMBus functions.
+            See http://smbus.org/specs/SMBus_3_0_20141220.pdf
+            </summary>
+        </member>
+    </members>
+</doc>

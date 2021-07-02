@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop.MakerArchitecture.Expansion</name>
+    </assembly>
+    <members>
+        <member name="P:PiTop.MakerArchitecture.Expansion.EncoderMotor.Power">
+            <summary>
+            Get or set the power value. Must be in the range [-1,1]
+            </summary>
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.EncoderMotor.OnConnection">
+            <inheritdoc />
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.EncoderMotorExtension.SetSpeed(PiTop.MakerArchitecture.Expansion.EncoderMotor,UnitsNet.Speed)">
+            <summary>
+            Sets the motor speed from linear speed and assuming Standard diameter <see cref="T:PiTop.MakerArchitecture.Expansion.WheelDiameters"/>.
+            </summary>
+            <param name="encoderMotor">The motor instance</param>
+            <param name="speed"></param>
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.EncoderMotorExtension.SetSpeed(PiTop.MakerArchitecture.Expansion.EncoderMotor,UnitsNet.Speed,UnitsNet.Length)">
+            <summary>
+            Sets the motor speed from linear speed and wheel diameter.
+            </summary>
+            <param name="encoderMotor">The motor instance</param>
+            <param name="speed">The linear speed.</param>
+            <param name="diameter">The wheel diameter.</param>
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.Sensors.UltrasonicSensorSMBus.GetDistance">
+            <inheritdoc />
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.Sensors.UltrasonicSensorSMBus.OnConnection">
+            <inheritdoc />
+        </member>
+        <member name="P:PiTop.MakerArchitecture.Expansion.ServoMotor.ControlMode">
+            <summary>
+            Set the control mode of the servo. In control mode 0, the servo will move at the provided speed until it reaches
+            a limit. In control mode 1, the servo will move at a provided speed to a provided angle.
+            </summary>
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.ServoMotor.GoToAngle(UnitsNet.Angle,UnitsNet.RotationalSpeed)">
+            <summary>
+            
+            </summary>
+            <param name="angle"></param>
+            <param name="speed"></param>
+        </member>
+        <member name="P:PiTop.MakerArchitecture.Expansion.ServoMotor.Speed">
+            <summary>
+            The speed with which to move to the limit of the servo motor, from -100.0 to 100.0
+            </summary>
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Expansion.ServoMotor.OnConnection">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

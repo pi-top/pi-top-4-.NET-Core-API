@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <PackageVersion>0.0.1</PackageVersion>
     <PackageId>pi-top.Camera.Psi</PackageId>
@@ -16,6 +16,14 @@
     <Authors>pi-top</Authors>
     <Product>pi-top[4]</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\PiTop.Camera.Psi.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\PiTop.Camera.Psi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

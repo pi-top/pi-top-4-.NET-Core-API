@@ -1,7 +1,7 @@
 ﻿using System;
 
 using FluentAssertions;
-
+using PiTop.MakerArchitecture.Foundation;
 using PiTop.Tests;
 using UnitsNet;
 using Xunit;
@@ -26,11 +26,20 @@ namespace PiTop.MakerArchitecture.Expansion.Tests
         }
 
         [Fact]
+        public void can_obtain_plate_from_module_as_foundation_plate()
+        {
+            using var plate = _module.GetOrCreatePlate<ExpansionPlate>();
+            var foundationPlate = _module.GetOrCreatePlate<FoundationPlate>();
+
+            foundationPlate.Should().BeSameAs(plate);
+        }
+
+        [Fact]
         public void plate_can_create_servo()
         {
             using var plate = _module.GetOrCreatePlate<ExpansionPlate>();
 
-            using var servoMotor = plate.GetOrCreateDevice<ServoMotor>(ServoMotorPort.S1);
+            using var servoMotor = plate.GetOrCreateServoMotor(ServoMotorPort.S1);
 
             servoMotor.Should().NotBeNull();
         }
@@ -40,7 +49,7 @@ namespace PiTop.MakerArchitecture.Expansion.Tests
         {
             using var plate = _module.GetOrCreatePlate<ExpansionPlate>();
 
-            using var encoderMotor = plate.GetOrCreateDevice<EncoderMotor>(EncoderMotorPort.M1);
+            using var encoderMotor = plate.GetOrCreateEncoderMotor(EncoderMotorPort.M1);
 
             encoderMotor.Should().NotBeNull();
         }
@@ -52,7 +61,7 @@ namespace PiTop.MakerArchitecture.Expansion.Tests
         {
             using var plate = _module.GetOrCreatePlate<ExpansionPlate>();
 
-            using var encoderMotor = plate.GetOrCreateDevice<EncoderMotor>(EncoderMotorPort.M1);
+            using var encoderMotor = plate.GetOrCreateEncoderMotor(EncoderMotorPort.M1);
             var action = new Action(() =>
             {
                 encoderMotor.Power = power;

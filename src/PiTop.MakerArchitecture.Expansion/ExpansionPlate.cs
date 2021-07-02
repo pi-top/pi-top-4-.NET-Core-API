@@ -1,27 +1,18 @@
 ﻿using Iot.Device.Imu;
-
-using PiTop.Abstractions;
 using PiTop.MakerArchitecture.Foundation;
 
 using System;
-using System.Collections.Generic;
-using System.Device.I2c;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-
 using UnitsNet;
 using UnitsNet.Units;
 
 namespace PiTop.MakerArchitecture.Expansion
 {
-    public class ExpansionPlate : PiTopPlate, IFoundationPlate, IExpansionPlate
+    public class ExpansionPlate : FoundationPlate
     {
-        private readonly ConnectedDeviceFactory<ServoMotorPort, ServoMotor> _servoMotorsFactory;
-        private readonly ConnectedDeviceFactory<EncoderMotorPort, EncoderMotor> _encoderMotorFactory;
-        private SMBusDevice? _mcu;
+        
         private Mpu9250? _imu;
-        private readonly FoundationPlate _foundationPlate;
 
         public RotationalSpeed3D AngularVelocity => GetAngularVelocity();
 
@@ -34,45 +25,17 @@ namespace PiTop.MakerArchitecture.Expansion
         public MagneticField3D MagneticField => GetMagneticField();
 
         public Orientation3D Orientation => GetOrientation();
-
-        private const int I2C_ADDRESS_PLATE_MCU = 0x04;
+        
         private const byte REGISTER_HEARTBEAT = 0x40;
         private static readonly TimeSpan HEARTBEAT_SEND_INTERVAL = TimeSpan.FromSeconds(0.5);
         private const byte HEARTBEAT_SECONDS_BEFORE_SHUTDOWN = 2;
 
         public ExpansionPlate(PiTop4Board module) : base(module)
         {
-            _foundationPlate = module.GetOrCreatePlate<FoundationPlate>();
+           
+            RegisterPorts<ServoMotorPort>();
+            RegisterPorts<EncoderMotorPort>();
 
-            _servoMotorsFactory = new ConnectedDeviceFactory<ServoMotorPort, ServoMotor>(deviceType =>
-            {
-                var ctorSignature = new[] { typeof(ServoMotorPort), typeof(SMBusDevice) };
-                var ctor = deviceType.GetConstructor(ctorSignature);
-                if (ctor != null)
-                {
-                    return devicePort =>
-                        (ServoMotor)Activator.CreateInstance(deviceType, devicePort, GetOrCreateMcu())!;
-
-                }
-                throw new InvalidOperationException(
-                    $"Cannot find suitable constructor for type {deviceType}, looking for signature {ctorSignature}");
-            });
-
-            _encoderMotorFactory = new ConnectedDeviceFactory<EncoderMotorPort, EncoderMotor>(
-                deviceType =>
-                {
-
-                    var ctorSignature = new[] { typeof(EncoderMotorPort), typeof(SMBusDevice) };
-                    var ctor = deviceType.GetConstructor(ctorSignature);
-                    if (ctor != null)
-                    {
-                        return devicePort =>
-                            (EncoderMotor)Activator.CreateInstance(deviceType, devicePort, GetOrCreateMcu())!;
-
-                    }
-                    throw new InvalidOperationException(
-                        $"Cannot find suitable constructor for type {deviceType}, looking for signature {ctorSignature}");
-                });
 
             // set up heartbeat
             RegisterForDisposal(Observable.Interval(HEARTBEAT_SEND_INTERVAL, TaskPoolScheduler.Default).Subscribe(_ =>
@@ -80,29 +43,14 @@ namespace PiTop.MakerArchitecture.Expansion
                 GetOrCreateMcu().WriteByte(REGISTER_HEARTBEAT, HEARTBEAT_SECONDS_BEFORE_SHUTDOWN);
             }));
 
-            RegisterForDisposal(_servoMotorsFactory);
-            RegisterForDisposal(_encoderMotorFactory);
             RegisterForDisposal(() =>
             {
                 _imu?.Dispose();
-                _mcu?.I2c.Dispose();
             });
         }
 
-        protected SMBusDevice GetOrCreateMcu()
-        {
-            return _mcu ??= new SMBusDevice(PiTop4Board.GetOrCreateI2CDevice(I2C_ADDRESS_PLATE_MCU));
-        }
+       
 
-        public T GetOrCreateDevice<T>(ServoMotorPort motorPort) where T : ServoMotor
-        {
-            return _servoMotorsFactory.GetOrCreateDevice<T>(motorPort);
-        }
-
-        public T GetOrCreateDevice<T>(EncoderMotorPort port) where T : EncoderMotor
-        {
-            return _encoderMotorFactory.GetOrCreateDevice<T>(port);
-        }
 
         private Orientation3D GetOrientation()
         {
@@ -166,54 +114,6 @@ namespace PiTop.MakerArchitecture.Expansion
             var reading = imu.GetGyroscopeReading();
             return RotationalSpeed3D.FromVector(reading, RotationalSpeedUnit.DegreePerSecond);
 
-        }
-
-        public IEnumerable<DigitalPortDeviceBase> DigitalDevices => _foundationPlate.DigitalDevices;
-
-        public IEnumerable<AnaloguePortDeviceBase> AnalogueDevices => _foundationPlate.AnalogueDevices;
-
-
-        public IEnumerable<ServoMotor> ServoMotors => _servoMotorsFactory.Devices;
-
-        public IEnumerable<EncoderMotor> EncodedMotors => _encoderMotorFactory.Devices;
-
-        public override IEnumerable<IConnectedDevice> Devices => _foundationPlate.Devices.Concat(EncodedMotors).Concat(ServoMotors);
-
-        IEnumerable<IConnectedDevice> IFoundationPlate.Devices => _foundationPlate.Devices;
-
-        public T GetOrCreateDevice<T>(DigitalPort port, Func<DigitalPort, IGpioControllerFactory, T> factory) where T : DigitalPortDeviceBase
-        {
-            return _foundationPlate.GetOrCreateDevice(port, factory);
-        }
-
-        public T GetOrCreateDevice<T>(DigitalPort port) where T : DigitalPortDeviceBase
-        {
-            return _foundationPlate.GetOrCreateDevice<T>(port);
-        }
-
-        public T GetOrCreateDevice<T>(AnaloguePort port, Func<AnaloguePort, int, II2CDeviceFactory, T> factory, int deviceAddress) where T : AnaloguePortDeviceBase
-        {
-            return _foundationPlate.GetOrCreateDevice(port, factory, deviceAddress);
-        }
-
-        public T GetOrCreateDevice<T>(AnaloguePort port) where T : AnaloguePortDeviceBase
-        {
-            return _foundationPlate.GetOrCreateDevice<T>(port);
-        }
-
-        public void DisposeDevice<T>(T device) where T : IConnectedDevice
-        {
-            switch (device)
-            {
-                default:
-                    _foundationPlate.DisposeDevice(device);
-                    break;
-            }
-        }
-
-        void IFoundationPlate.DisposeDevice<T>(T device)
-        {
-            _foundationPlate.DisposeDevice(device);
         }
     }
 }

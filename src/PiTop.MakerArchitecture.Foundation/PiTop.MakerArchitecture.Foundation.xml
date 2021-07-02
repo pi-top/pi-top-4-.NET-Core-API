@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop.MakerArchitecture.Foundation</name>
+    </assembly>
+    <members>
+        <member name="M:PiTop.MakerArchitecture.Foundation.Sensors.LightSensor.OnConnection">
+            <inheritdoc />
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Foundation.Sensors.Potentiometer.OnConnection">
+            <inheritdoc />
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Foundation.Sensors.SoundSensor.OnConnection">
+            <inheritdoc />
+        </member>
+        <member name="M:PiTop.MakerArchitecture.Foundation.Sensors.UltrasonicSensorGpio.OnConnection">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

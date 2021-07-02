@@ -1,18 +1,20 @@
-﻿using System.Device.Gpio;
+﻿using System;
+using System.Device.Gpio;
 
 using PiTop.Abstractions;
 
 namespace PiTop.MakerArchitecture.Foundation.Components
 {
-    public class Buzzer : DigitalPortDeviceBase
+    public class Buzzer : PlateConnectedDevice
     {
-        private readonly int _buzzPin;
+        private readonly IGpioControllerFactory _controllerFactory;
+        private int _buzzPin;
         private bool _isOn;
+        private GpioController Controller { get; set; }
 
-        public Buzzer(DigitalPort port, IGpioControllerFactory controllerFactory) : base(port, controllerFactory)
+        public Buzzer(IGpioControllerFactory controllerFactory)
         {
-            (_buzzPin, _) = Port.ToPinPair();
-            AddToDisposables(Controller.OpenPinAsDisposable(_buzzPin, PinMode.Output));
+            _controllerFactory = controllerFactory;
         }
 
         public void On()
@@ -52,6 +54,21 @@ namespace PiTop.MakerArchitecture.Foundation.Components
         public void Toggle()
         {
             IsOn = !IsOn;
+        }
+
+        protected override void OnConnection()
+        {
+            Controller = _controllerFactory.GetOrCreateController();
+            if (Port!.PinPair is { } pinPair)
+            {
+                _buzzPin = pinPair.pin0;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Port {Port.Name} as no pin pair.");
+            }
+            
+            AddToDisposables(Controller.OpenPinAsDisposable(_buzzPin, PinMode.Output));
         }
     }
 }

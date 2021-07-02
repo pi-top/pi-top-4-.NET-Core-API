@@ -24,21 +24,21 @@ namespace PiTop.MakerArchitecture.Foundation.InteractiveExtension
     public static class DeviceExtensions
     {
 
-        internal static IHtmlContent DrawSvg(this DigitalPortDeviceBase digitalDevice)
+        internal static IHtmlContent DrawSvg(this PlateConnectedDevice digitalDevice)
         {
             var id = "PiTop.MakerArchitecture.Foundation.InteractiveExtension" + Guid.NewGuid().ToString("N");
             return div[id: id](svg(digitalDevice.GetSvg()));
         }
 
-        internal static IHtmlContent DrawSvg(this AnaloguePortDeviceBase analogueDevice)
+        /// <summary>
+        /// Gets the device value.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">device</exception>
+        public static object GetDeviceValue(this PlateConnectedDevice device)
         {
-            var id = "PiTop.MakerArchitecture.Foundation.InteractiveExtension" + Guid.NewGuid().ToString("N");
-            return div[id: id](svg(analogueDevice.GetSvg()));
-        }
-
-        public static object GetDeviceValue(this DigitalPortDeviceBase digitalDevice)
-        {
-            switch (digitalDevice)
+            switch (device)
             {
                 case Buzzer buzzer:
                     return buzzer.IsOn ? 1 : 0;
@@ -48,8 +48,14 @@ namespace PiTop.MakerArchitecture.Foundation.InteractiveExtension
                     return button.IsPressed ? 1 : 0;
                 case UltrasonicSensor ultrasonicSensor:
                     return ultrasonicSensor.Distance.Value;
+                case LightSensor lightSensor:
+                    return lightSensor.Value;
+                case Potentiometer potentiometer:
+                    return potentiometer.Position;
+                case SoundSensor soundSensor:
+                    return soundSensor.Value;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(digitalDevice));
+                    throw new ArgumentOutOfRangeException(nameof(device));
             }
         }
     }

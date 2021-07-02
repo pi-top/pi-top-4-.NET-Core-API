@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop.Camera</name>
+    </assembly>
+    <members>
+        <member name="T:PiTop.Camera.HttpSnapshotCamera">
+            <summary>
+            Follow instructions from https://github.com/jacksonliam/mjpg-streamer to compile and install mjpg-streamer.
+            When the camera is connected, the stream is also viewable externally on port 8080 (barring any firewalls).
+            </summary>
+        </member>
+        <member name="T:PiTop.Camera.StreamingCamera">
+            <summary>
+            Follow instructions from https://github.com/jacksonliam/mjpg-streamer to compile and install mjpg-streamer.
+            When the camera is connected, the stream is also viewable externally on port 8080 (barring any firewalls).
+            </summary>
+        </member>
+    </members>
+</doc>
