@@ -137,17 +137,29 @@ namespace PiTop
 
         public T GetOrCreatePlate<T>() where T : PiTopPlate
         {
-            var key = typeof(T);
-            var plate = _plates.GetOrAdd(key, plateType =>
+            var plateType = typeof(T);
+            
+            var plate = _plates.GetOrAdd(plateType, plateType =>
             {
                 using var operation = Log.OnEnterAndConfirmOnExit();
                 var newPlate = (Activator.CreateInstance(plateType, args: new object[] { this }) as T)!;
-                newPlate.RegisterForDisposal(() => _plates.TryRemove(key, out _));
+                newPlate.RegisterForDisposal(() => _plates.TryRemove(plateType, out _));
                 operation.Succeed();
                 return newPlate;
             });
 
+            RegisterTypeAlias(plate, plateType.BaseType);
+
             return (plate as T)!;
+        }
+
+        private void RegisterTypeAlias(PiTopPlate plate, Type? type)
+        {
+            if (type is {} baseType && baseType != typeof(PiTopPlate) && typeof(PiTopPlate).IsAssignableFrom(baseType))
+            {
+                _plates.TryAdd(baseType, plate);
+                RegisterTypeAlias(plate, baseType.BaseType);
+            }
         }
 
         private void ModuleDriverClientMessageReceived(object? sender, PiTopMessage message)

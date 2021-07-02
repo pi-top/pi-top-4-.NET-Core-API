@@ -8,7 +8,9 @@ using Microsoft.DotNet.Interactive.Commands;
 using Microsoft.DotNet.Interactive.Formatting;
 
 using OpenCvSharp;
-
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Png;
 
 using static Microsoft.DotNet.Interactive.Formatting.PocketViewTags;
@@ -19,39 +21,12 @@ namespace PiTop.Camera.InteractiveExtension
     {
         public async Task OnLoadAsync(Kernel kernel)
         {
-            Formatter.Register<Mat>((openCvImage, writer) =>
-            {
-                var id = Guid.NewGuid().ToString("N");
-                var data = openCvImage.ImEncode(".png");
-                var imgTag = CreateImgTag(data, id, openCvImage.Height, openCvImage.Width);
-                writer.Write(imgTag);
-            }, HtmlFormatter.MimeType);
-
-            Formatter.Register<System.Drawing.Image>((image, writer) =>
-            {
-                var id = Guid.NewGuid().ToString("N");
-                using var stream = new MemoryStream();
-                image.Save(stream, ImageFormat.Png);
-                stream.Flush();
-                var data = stream.ToArray();
-                var imgTag = CreateImgTag(data, id, image.Height, image.Width);
-                writer.Write(imgTag);
-            }, HtmlFormatter.MimeType);
-
-            Formatter.Register<SixLabors.ImageSharp.Image>((image, writer) =>
-            {
-                var id = Guid.NewGuid().ToString("N");
-                var data = GetImageBytes(image);
-                var imgTag = CreateImgTag(data, id, image.Height, image.Width);
-                writer.Write(imgTag);
-            }, HtmlFormatter.MimeType);
 
             Formatter.Register<ICamera>((camera, writer) =>
             {
                 var image = camera.GetFrame();
                 var id = Guid.NewGuid().ToString("N");
-                var data = GetImageBytes(image);
-                var imgTag = CreateImgTag(data, id, image.Height, image.Width);
+                var imgTag = CreateImgTag(image, id, image.Height, image.Width);
                 writer.Write(imgTag);
             }, HtmlFormatter.MimeType);
 
@@ -62,18 +37,12 @@ namespace PiTop.Camera.InteractiveExtension
                     "Added support for Camera.")));
         }
 
-        private static byte[] GetImageBytes(SixLabors.ImageSharp.Image image)
+        private static PocketView CreateImgTag(Image image, string id, int height, int width)
         {
-            using var stream = new MemoryStream();
-            image.Save(stream, new PngEncoder());
-            stream.Flush();
-            var data = stream.ToArray();
-            return data;
-        }
+            var format = image.Frames.Count > 1 ? (IImageFormat)GifFormat.Instance : PngFormat.Instance;
+            var data = image.ToBase64String(format);
+            var imageSource = $"data:{format.DefaultMimeType};base64, {data}";
 
-        private static PocketView CreateImgTag(byte[] data, string id, int height, int width)
-        {
-            var imageSource = $"data:image/png;base64, {Convert.ToBase64String(data)}";
             PocketView imgTag = img[id: id, src: imageSource, height: height, width: width]();
             return imgTag;
         }

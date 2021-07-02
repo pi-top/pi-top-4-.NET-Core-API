@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop.Algorithms</name>
+    </assembly>
+    <members>
+        <member name="T:PiTop.Algorithms.OneEuroFilter">
+            <summary>
+            Smoothing filter adapted from https://github.com/jaantollander/OneEuroFilter
+            </summary>
+        </member>
+        <member name="T:PiTop.Algorithms.VelocityEstimator">
+            <summary>
+            Calculates the velocity by sampling acceleration values.
+            The initial velocity of the sensor is 0 m/s and it will require a pair of sample for first value .
+            </summary>
+        </member>
+        <member name="P:PiTop.Algorithms.VelocityEstimator.Velocity">
+            <summary>
+            The velocity
+            </summary>
+        </member>
+    </members>
+</doc>

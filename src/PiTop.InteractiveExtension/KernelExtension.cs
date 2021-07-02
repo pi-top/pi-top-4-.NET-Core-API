@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 using Microsoft.DotNet.Interactive;
@@ -6,7 +7,9 @@ using Microsoft.DotNet.Interactive.Commands;
 using Microsoft.DotNet.Interactive.Formatting;
 
 using SixLabors.ImageSharp;
-
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Png;
 using static Microsoft.DotNet.Interactive.Formatting.PocketViewTags;
 
 namespace PiTop.InteractiveExtension
@@ -15,14 +18,14 @@ namespace PiTop.InteractiveExtension
     {
         public async Task OnLoadAsync(Kernel kernel)
         {
-            Formatter.Register<Sh1106Display>((d, w) =>
+            Formatter.Register<Sh1106Display>((d, writer) =>
             {
-                using (MemoryStream s = new MemoryStream())
-                {
-                    d.Capture().SaveAsPng(s);
-                    PocketView view = img[src: @"data:image/png;base64, " + System.Convert.ToBase64String(s.ToArray())];
-                    w.Write(view);
-                }
+                var id = Guid.NewGuid().ToString("N");
+                using var image = d.Capture();
+                var format = image.Frames.Count > 1 ? (IImageFormat)GifFormat.Instance : PngFormat.Instance;
+                var imageSource = image.ToBase64String(format);
+                PocketView imgTag = img[id: id, src: imageSource]();
+                writer.Write(imgTag);
             }, "text/html");
 
             await kernel.SendAsync(

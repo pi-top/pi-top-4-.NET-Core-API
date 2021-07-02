@@ -5,14 +5,33 @@ using PiTop.Abstractions;
 
 namespace PiTop.MakerArchitecture.Foundation.Sensors
 {
-    public class Button : DigitalPortDeviceBase
+    public class Button : PlateConnectedDevice
     {
+        private readonly IGpioControllerFactory _controllerFactory;
         public event EventHandler<bool>? PressedChanged;
         public event EventHandler<EventArgs>? Pressed;
         public event EventHandler<EventArgs>? Released;
-        public Button(DigitalPort port, IGpioControllerFactory controllerFactory) : base(port, controllerFactory)
+
+        private GpioController Controller { get; set; }
+
+        public Button(IGpioControllerFactory controllerFactory)
         {
-            var (buttonPin, _) = Port.ToPinPair();
+            _controllerFactory = controllerFactory;
+        }
+
+        protected override void OnConnection()
+        {
+            var buttonPin = -1;
+            Controller = _controllerFactory.GetOrCreateController();
+            if (Port!.PinPair is { } pinPair)
+            {
+                buttonPin = pinPair.pin0;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Port {Port.Name} as no pin pair.");
+            }
+            
             var openPinAsDisposable = Controller.OpenPinAsDisposable(buttonPin, PinMode.Input);
             var registerCallbackForPinValueChangedEventAsDisposable = Controller.RegisterCallbackForPinValueChangedEventAsDisposable(buttonPin, PinEventTypes.Falling | PinEventTypes.Rising, Callback);
 
@@ -21,7 +40,6 @@ namespace PiTop.MakerArchitecture.Foundation.Sensors
 
             IsPressed = Controller.Read(buttonPin) == PinValue.Low;
         }
-
         private void Callback(object? _, PinValueChangedEventArgs pinValueChangedEventArgs)
         {
             switch (pinValueChangedEventArgs.ChangeType)

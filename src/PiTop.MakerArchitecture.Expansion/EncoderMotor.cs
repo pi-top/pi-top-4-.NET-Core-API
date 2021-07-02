@@ -7,7 +7,7 @@ using static Pocket.Logger;
 
 namespace PiTop.MakerArchitecture.Expansion
 {
-    public class EncoderMotor : IConnectedDevice
+    public class EncoderMotor : PlateConnectedDevice
     {
         private const int MMK_STANDARD_GEAR_RATIO = 42;
         private const int MAX_DC_MOTOR_RPM = 6000;
@@ -170,12 +170,8 @@ namespace PiTop.MakerArchitecture.Expansion
             return value;
         }
 
-        public void Dispose()
-        {
-            Stop();
-        }
-
-        public void Connect()
+        /// <inheritdoc />
+        protected override void OnConnection()
         {
             BrakingType = BrakingType.Coast;
             ControlMode = 0;

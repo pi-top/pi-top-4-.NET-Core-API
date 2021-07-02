@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PackageVersion>0.0.1</PackageVersion>
     <PackageId>pi-top.Algorithms</PackageId>
     <IsPackable>true</IsPackable>
@@ -17,9 +17,17 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\PiTop.Algorithms.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\PiTop.Algorithms.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="UnitsNet" Version="4.90.0" />
+    <PackageReference Include="UnitsNet" Version="4.97.0" />
   </ItemGroup>
 
   <ItemGroup>

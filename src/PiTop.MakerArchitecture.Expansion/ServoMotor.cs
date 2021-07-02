@@ -8,7 +8,7 @@ using static Pocket.Logger;
 
 namespace PiTop.MakerArchitecture.Expansion
 {
-    public class ServoMotor : IConnectedDevice
+    public class ServoMotor : PlateConnectedDevice
     {
         private readonly SMBusDevice _controller;
         private Angle _zeroPoint;
@@ -130,17 +130,16 @@ namespace PiTop.MakerArchitecture.Expansion
             }
         }
 
-        public void Dispose()
-        {
-            Stop();
-        }
+  
 
         private void Stop()
         {
             Speed = RotationalSpeed.Zero;
         }
 
-        public void Connect()
+
+        /// <inheritdoc />
+        protected override void OnConnection()
         {
             _controller.WriteWord(REGISTER_MIN_PULSE_WIDTH, MIN_PULSE_WIDTH_MICRO_S);
             _controller.WriteWord(REGISTER_MAX_PULSE_WIDTH, MAX_PULSE_WIDTH_MICRO_S);

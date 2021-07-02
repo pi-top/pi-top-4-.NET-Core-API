@@ -18,10 +18,21 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\PiTop.Camera.InteractiveExtension.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\PiTop.Camera.InteractiveExtension.xml</DocumentationFile>
+  </PropertyGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="microsoft.dotnet.interactive" Version="1.0.0-beta.21255.3" />
-    <PackageReference Include="microsoft.dotnet.interactive.formatting" Version="1.0.0-beta.21255.3" />
+    <PackageReference Include="Interactive.Extension.ImageSharp" Version="1.0.17" />
+    <PackageReference Include="Interactive.Extension.OpenCvSharp4" Version="1.0.17" />
+    <PackageReference Include="Interactive.Extension.System.Drawing" Version="1.0.17" />
+    <PackageReference Include="microsoft.dotnet.interactive" Version="1.0.0-beta.21330.2" />
+    <PackageReference Include="microsoft.dotnet.interactive.formatting" Version="1.0.0-beta.21330.2" />
   </ItemGroup>
 
 

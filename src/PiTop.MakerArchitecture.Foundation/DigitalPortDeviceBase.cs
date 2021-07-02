@@ -9,7 +9,7 @@ namespace PiTop.MakerArchitecture.Foundation
 {
     public abstract class DigitalPortDeviceBase : IConnectedDevice
     {
-        private readonly CompositeDisposable _disposables = new CompositeDisposable();
+        private readonly CompositeDisposable _disposables = new();
         public DigitalPort Port { get; }
         protected GpioController Controller { get; }
 

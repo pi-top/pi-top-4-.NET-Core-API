@@ -9,23 +9,9 @@ using static PiTop.MakerArchitecture.Foundation.InteractiveExtension.SvgUtilitie
 
 namespace PiTop.MakerArchitecture.Foundation.InteractiveExtension
 {
-    internal static class AnalogueDeviceExtensions
+    internal static partial class PlateConnectedDeviceExtensions
     {
-        internal static PocketView GetSvg(this AnaloguePortDeviceBase analogueDevice)
-        {
-            switch (analogueDevice)
-            {
-                case LightSensor lightSensor:
-                    return lightSensor.GetSvg();
-                case Potentiometer potentiometer:
-                    return potentiometer.GetSvg();
-                case SoundSensor soundSensor:
-                    return soundSensor.GetSvg();
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(analogueDevice));
-            }
-        }
-
+ 
         internal static PocketView GetSvg(this SoundSensor soundSensor)
         {
             var value = soundSensor.Value.ToString("0.##");
@@ -90,21 +76,5 @@ namespace PiTop.MakerArchitecture.Foundation.InteractiveExtension
                     _.circle[cx: "788.557", cy: "138.653", r: "8.673", style: "fill:rgb(235,235,235);fill-opacity:0;stroke:black;stroke-width:2.74px;"]())
                 );
         }
-
-        public static object GetDeviceValue(this AnaloguePortDeviceBase analogueDevice)
-        {
-            switch (analogueDevice)
-            {
-                case LightSensor lightSensor:
-                    return lightSensor.Value;
-                case Potentiometer potentiometer:
-                    return potentiometer.Position;
-                case SoundSensor soundSensor:
-                    return soundSensor.Value;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(analogueDevice));
-            }
-        }
-
     }
 }

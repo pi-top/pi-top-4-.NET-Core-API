@@ -11,11 +11,11 @@ using static PiTop.MakerArchitecture.Foundation.InteractiveExtension.SvgUtilitie
 
 namespace PiTop.MakerArchitecture.Foundation.InteractiveExtension
 {
-    internal static class DigitalDeviceExtensions
+    internal static partial class PlateConnectedDeviceExtensions
     {
-        internal static PocketView GetSvg(this DigitalPortDeviceBase digitalDevice)
+        internal static PocketView GetSvg(this PlateConnectedDevice device)
         {
-            switch (digitalDevice)
+            switch (device)
             {
                 case Buzzer buzzer:
                     return buzzer.GetSvg();
@@ -25,8 +25,14 @@ namespace PiTop.MakerArchitecture.Foundation.InteractiveExtension
                     return button.GetSvg();
                 case UltrasonicSensor ultrasonicSensor:
                     return ultrasonicSensor.GetSvg();
+                case LightSensor lightSensor:
+                    return lightSensor.GetSvg();
+                case Potentiometer potentiometer:
+                    return potentiometer.GetSvg();
+                case SoundSensor soundSensor:
+                    return soundSensor.GetSvg();
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(digitalDevice));
+                    throw new ArgumentOutOfRangeException(nameof(device));
             }
         }
 

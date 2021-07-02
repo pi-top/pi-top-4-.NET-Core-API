@@ -1,4 +1,4 @@
-﻿namespace PiTop.MakerArchitecture.Foundation
+﻿namespace PiTop
 {
     public abstract class DisplayPropertyBase
     {

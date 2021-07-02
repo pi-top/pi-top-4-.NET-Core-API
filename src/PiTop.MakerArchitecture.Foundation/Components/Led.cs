@@ -1,25 +1,39 @@
-﻿using System.Device.Gpio;
+﻿using System;
+using System.Device.Gpio;
 
 using PiTop.Abstractions;
 
 namespace PiTop.MakerArchitecture.Foundation.Components
 {
-    public class Led : DigitalPortDeviceBase
+    public class Led : PlateConnectedDevice
     {
-        private readonly int _ledPin;
+        private readonly IGpioControllerFactory _controllerFactory;
+        private int _ledPin;
         private bool _isOn;
 
-        public Led(DigitalPort port, IGpioControllerFactory controllerFactory) : base(port, controllerFactory)
+        public Led(IGpioControllerFactory controllerFactory)
         {
-            (_ledPin, _) = Port.ToPinPair();
+            _controllerFactory = controllerFactory;
         }
 
         protected override void OnConnection()
         {
+            Controller = _controllerFactory.GetOrCreateController();
+            if (Port!.PinPair is { } pinPair)
+            {
+                _ledPin = pinPair.pin0;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Port {Port.Name} as no pin pair.");
+            }
+
             _isOn = false;
             AddToDisposables(Controller.OpenPinAsDisposable(_ledPin, PinMode.Output));
             Controller.Write(_ledPin, PinValue.Low);
         }
+
+        private GpioController Controller { get; set; }
 
         public Led On()
         {

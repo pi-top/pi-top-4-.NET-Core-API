@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop.MakerArchitecture.Foundation.InteractiveExtension</name>
+    </assembly>
+    <members>
+        <member name="M:PiTop.MakerArchitecture.Foundation.InteractiveExtension.DeviceExtensions.GetDeviceValue(PiTop.PlateConnectedDevice)">
+            <summary>
+            Gets the device value.
+            </summary>
+            <param name="device">The device.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">device</exception>
+        </member>
+    </members>
+</doc>

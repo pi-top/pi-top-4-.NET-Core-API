@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiTop</name>
+    </assembly>
+    <members>
+        <member name="P:PiTop.PiTopPlate.ConnectedDevices">
+            <summary>
+            List of device connected tho the plate.
+            </summary>
+        </member>
+        <member name="P:PiTop.PiTopPlate.Ports">
+            <summary>
+            Plate ports
+            </summary>
+        </member>
+        <member name="M:PiTop.PiTopPlate.RegisterPorts``1">
+            <summary>
+            Register ports
+            </summary>
+            <typeparam name="T"></typeparam>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:PiTop.PiTopPlate.GetOrCreateConnectedDevice``1(System.String)">
+            <summary>
+            Creates a connected device using the port.
+            </summary>
+            <param name="portName">Port to use for the connection.</param>
+            <typeparam name="T">Type of the device to create.</typeparam>
+            <returns>The new device.</returns>
+        </member>
+        <member name="M:PiTop.PiTopPlate.GetOrCreateConnectedDevice``1(System.String,System.Func{``0})">
+            <summary>
+            Creates a connected device using the port.
+            </summary>
+            <param name="portName">Port to use for the connection.</param>
+            <param name="deviceFactory">Factory to create the device.</param>
+            <typeparam name="T">Type of the device to create.</typeparam>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:PiTop.PlateConnectedDevice">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:PiTop.PlateConnectedDevice.DisplayProperties">
+            <summary>
+            Custom properties to use at display time.
+            </summary>
+        </member>
+        <member name="M:PiTop.PlateConnectedDevice.Connect(PiTop.PlatePort)">
+            <summary>
+            Establishes a connection on the provided port.
+            </summary>
+            <param name="port">The port to connect to.</param>
+        </member>
+        <member name="M:PiTop.PlateConnectedDevice.OnConnection">
+            <summary>
+            Called when on Connection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:PiTop.PlateConnectedDevice.Port">
+            <summary>
+            Currently used port.
+            </summary>
+        </member>
+        <member name="M:PiTop.PlateConnectedDevice.AddToDisposables(System.IDisposable)">
+            <summary>
+            Add to disposable.
+            </summary>
+            <param name="disposable"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:PiTop.PlateConnectedDevice.AddToDisposables(System.Action)">
+            <summary>
+            Add to disposable.
+            </summary>
+            <param name="disposable"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:PiTop.PlateConnectedDevice.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

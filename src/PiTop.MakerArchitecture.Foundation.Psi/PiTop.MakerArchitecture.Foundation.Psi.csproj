@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <PackageVersion>0.0.1</PackageVersion>
     <PackageId>pi-top.MakerArchitecture.Foundation.Psi</PackageId>
@@ -16,6 +16,14 @@
     <Authors>pi-top</Authors>
     <Product>pi-top[4]</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\PiTop.MakerArchitecture.Foundation.Psi.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\PiTop.MakerArchitecture.Foundation.Psi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

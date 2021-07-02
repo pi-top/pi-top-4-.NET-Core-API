@@ -8,5 +8,9 @@ namespace PiTop.MakerArchitecture.Foundation
         {
             
         }
+
+        public SensorReadException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }
